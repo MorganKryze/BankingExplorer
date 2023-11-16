@@ -1,0 +1,147 @@
+{
+  "version": 3,
+  "targets": {
+    "net7.0": {
+      "ConsoleAppVisuals/2.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/ConsoleAppVisuals.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/ConsoleAppVisuals.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "CsvHelper/30.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/CsvHelper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/CsvHelper.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ConsoleAppVisuals/2.1.0": {
+      "sha512": "a9DKBeARjLt16QJtltMHKC7LDUn2FE+gGs6aGCqg2Fj5peBdCuX70gROcOhFSKAS3vHlR73NflvR6XaQ7qSN2g==",
+      "type": "package",
+      "path": "consoleappvisuals/2.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "consoleappvisuals.2.1.0.nupkg.sha512",
+        "consoleappvisuals.nuspec",
+        "icon.png",
+        "lib/net7.0/ConsoleAppVisuals.dll",
+        "lib/net7.0/ConsoleAppVisuals.xml"
+      ]
+    },
+    "CsvHelper/30.0.1": {
+      "sha512": "rcZtgbWR+As4G3Vpgx0AMNmShGuQLFjkHAPIIflzrfkJCx8/AOd4m96ZRmiU1Wi39qS5UVjV0P8qdgqOo5Cwyg==",
+      "type": "package",
+      "path": "csvhelper/30.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "csvhelper.30.0.1.nupkg.sha512",
+        "csvhelper.nuspec",
+        "lib/net45/CsvHelper.dll",
+        "lib/net45/CsvHelper.xml",
+        "lib/net47/CsvHelper.dll",
+        "lib/net47/CsvHelper.xml",
+        "lib/net5.0/CsvHelper.dll",
+        "lib/net5.0/CsvHelper.xml",
+        "lib/net6.0/CsvHelper.dll",
+        "lib/net6.0/CsvHelper.xml",
+        "lib/netstandard2.0/CsvHelper.dll",
+        "lib/netstandard2.0/CsvHelper.xml",
+        "lib/netstandard2.1/CsvHelper.dll",
+        "lib/netstandard2.1/CsvHelper.xml"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net7.0": [
+      "ConsoleAppVisuals >= 2.1.0",
+      "CsvHelper >= 30.0.1"
+    ]
+  },
+  "packageFolders": {
+    "/Users/yannvidamment/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/yannvidamment/Documents/__FILES__/DEV/GIT-PROJECTS/Project-BankingAssistant/Dev/program/program.csproj",
+      "projectName": "program",
+      "projectPath": "/Users/yannvidamment/Documents/__FILES__/DEV/GIT-PROJECTS/Project-BankingAssistant/Dev/program/program.csproj",
+      "packagesPath": "/Users/yannvidamment/.nuget/packages/",
+      "outputPath": "/Users/yannvidamment/Documents/__FILES__/DEV/GIT-PROJECTS/Project-BankingAssistant/Dev/program/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/yannvidamment/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net7.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net7.0": {
+        "targetAlias": "net7.0",
+        "dependencies": {
+          "ConsoleAppVisuals": {
+            "target": "Package",
+            "version": "[2.1.0, )"
+          },
+          "CsvHelper": {
+            "target": "Package",
+            "version": "[30.0.1, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.102/RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "program/1.0.0": {
+        "dependencies": {
+          "ConsoleAppVisuals": "2.1.0",
+          "CsvHelper": "30.0.1"
+        },
+        "runtime": {
+          "program.dll": {}
+        }
+      },
+      "ConsoleAppVisuals/2.1.0": {
+        "runtime": {
+          "lib/net7.0/ConsoleAppVisuals.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
+          }
+        }
+      },
+      "CsvHelper/30.0.1": {
+        "runtime": {
+          "lib/net6.0/CsvHelper.dll": {
+            "assemblyVersion": "30.0.0.0",
+            "fileVersion": "30.0.1.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "program/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ConsoleAppVisuals/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-a9DKBeARjLt16QJtltMHKC7LDUn2FE+gGs6aGCqg2Fj5peBdCuX70gROcOhFSKAS3vHlR73NflvR6XaQ7qSN2g==",
+      "path": "consoleappvisuals/2.1.0",
+      "hashPath": "consoleappvisuals.2.1.0.nupkg.sha512"
+    },
+    "CsvHelper/30.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rcZtgbWR+As4G3Vpgx0AMNmShGuQLFjkHAPIIflzrfkJCx8/AOd4m96ZRmiU1Wi39qS5UVjV0P8qdgqOo5Cwyg==",
+      "path": "csvhelper/30.0.1",
+      "hashPath": "csvhelper.30.0.1.nupkg.sha512"
+    }
+  }
+}
