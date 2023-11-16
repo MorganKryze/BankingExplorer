@@ -88,7 +88,8 @@ namespace program
                 "Bienvenue dans votre gestionnaire de comptes : ", 
                 default, 
                 "Choisir un compte", 
-                "Générer une archive");
+                "Générer une archive",
+                "Actualiser fenêtre");
             switch (index)
             {
                 case 0:
@@ -96,6 +97,9 @@ namespace program
                     break;
                 case 1:
                     s_Jump = second;
+                    break;
+                case 2:
+                    s_Jump = Jump.Home;
                     break;
                 case -1:
                     s_Jump = back;
@@ -147,7 +151,7 @@ namespace program
                     break;
             }
         }
-        static CsvLine? Sheet(Jump add = Jump.Add, Jump update = Jump.Update, Jump back = Jump.Months)
+        static CsvLine? Sheet(Jump add = Jump.Add, Jump update = Jump.Update, Jump back = Jump.Months, Jump again = Jump.Sheet)
         {
             sheet = new CsvSheet(s_selectedMonth);
             var index = Tools.ScrollingTableSelector(sheet.DataAsList[0], default, true, sheet.DataAsList.GetRange(1, sheet.DataAsList.Count - 1).ToArray());
@@ -158,14 +162,18 @@ namespace program
             }
             else if (index.Item1 == -2)
             {
+                if (index.Item2 == sheet.DataAsList.Count - 2){
+                    s_Jump = again;
+                    return null;
+                }
                 switch(Core.ScrollingMenuSelector("Êtes-vous sûr de vouloir supprimer cet élément ?", default, "Oui", "Non"))
                 {
                     case 0:
                         sheet?.RemoveLine(index.Item2);
-                        s_Jump = Jump.Sheet;
+                        s_Jump = again;
                         break;
                     case 1: case -1:
-                        s_Jump = Jump.Sheet;
+                        s_Jump = again;
                         break;
                 }
                 return null;
