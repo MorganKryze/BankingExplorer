@@ -1,6 +1,6 @@
 # BankingAssistant
 
-## Installation
+## Install
 
 Download the project as a zip file and extract it (or clone the repository) in a safe place.
 
