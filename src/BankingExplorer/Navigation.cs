@@ -1,6 +1,6 @@
 namespace BankingExplorer;
 
-class Navigation
+class Program
 {
     #region Fields
     private static string s_selectedAccount = "";
@@ -15,59 +15,41 @@ class Navigation
     const string ARCHIVE_PATH = "../../data/archive/";
     #endregion
 
-    static void Main(string[] args)
+    static void Main()
     {
         SetupWindow();
         Window.Render();
 
-        Home:
-        Home();
-        goto Selection;
-
-        Account_Selection:
-        Accounts();
-        goto Selection;
-
-        Months_Selection:
-        Months();
-        goto Selection;
-
-        Display_Sheet:
-        Display_Sheet();
-        goto Selection;
-
-        Update:
-        Update();
-        goto Selection;
-
-        Archive:
-        Archive();
-        goto Selection;
-
-        Selection:
-
-        // Takes the next value of the tuple
-        switch (s_Jump.Item2)
+        while (true)
         {
-            case Jump.Home:
-                goto Home;
-            case Jump.Accounts:
-                goto Account_Selection;
-            case Jump.Months:
-                goto Months_Selection;
-            case Jump.Sheet:
-                goto Display_Sheet;
-            case Jump.Update:
-                goto Update;
-            case Jump.Archive:
-                goto Archive;
-            case Jump.Exit:
-                Window.Close();
-                break;
+            switch (s_Jump.Item2)
+            {
+                case Jump.Home:
+                    Home();
+                    break;
+                case Jump.Accounts:
+                    Accounts();
+                    break;
+                case Jump.Months:
+                    Months();
+                    break;
+                case Jump.Sheet:
+                    Display_Sheet();
+                    break;
+                case Jump.Update:
+                    Update();
+                    break;
+                case Jump.Archive:
+                    Archive();
+                    break;
+                case Jump.Exit:
+                    Window.Close();
+                    break;
+            }
         }
     }
 
-    static void JumpTo(Jump next) => s_Jump = (s_Jump.Item2, next);
+    static void Next(Jump next) => s_Jump = (s_Jump.Item2, next);
 
     static void SetupWindow()
     {
@@ -99,19 +81,19 @@ class Navigation
                 switch (response?.Value)
                 {
                     case 0:
-                        JumpTo(Jump.Accounts);
+                        Next(Jump.Accounts);
                         break;
                     case 1:
-                        JumpTo(Jump.Archive);
+                        Next(Jump.Archive);
                         break;
                     case 2:
-                        JumpTo(Jump.Exit);
+                        Next(Jump.Exit);
                         break;
                 }
                 break;
             case Output.Deleted:
             case Output.Escaped:
-                JumpTo(Jump.Exit);
+                Next(Jump.Exit);
                 break;
         }
 
@@ -140,7 +122,7 @@ class Navigation
         {
             case Output.Deleted:
             case Output.Escaped:
-                JumpTo(Jump.Home);
+                Next(Jump.Home);
                 break;
             case Output.Selected:
                 s_selectedAccount = folders[response.Value] + "/";
@@ -152,10 +134,10 @@ class Navigation
                             + DateTime.Now.ToString("MM.yyyy", CultureInfo.InvariantCulture)
                             + ".csv"
                     );
-                    JumpTo(Jump.Accounts);
+                    Next(Jump.Accounts);
                 }
                 else
-                    JumpTo(Jump.Months);
+                    Next(Jump.Months);
                 break;
         }
 
@@ -185,11 +167,11 @@ class Navigation
             case Output.Deleted:
             case Output.Escaped:
                 s_selectedMonth = "";
-                JumpTo(Jump.Accounts);
+                Next(Jump.Accounts);
                 break;
             case Output.Selected:
                 s_selectedMonth = files[response.Value];
-                JumpTo(Jump.Sheet);
+                Next(Jump.Sheet);
                 break;
         }
 
@@ -199,7 +181,6 @@ class Navigation
     static void Display_Sheet()
     {
         Sheet = new CsvSheet(s_selectedMonth);
-        Core.WriteDebugMark(Placement.TopRight, "l: " + Sheet.originalMatrix.Count);
         TableSelector lineSelector = new TableSelector(
             "Cash flow",
             Sheet.HEADERS,
@@ -216,23 +197,23 @@ class Navigation
         switch (response?.Status)
         {
             case Output.Escaped:
-                JumpTo(Jump.Months);
+                Next(Jump.Months);
                 break;
 
             case Output.Selected:
                 if (response.Value == Sheet.originalMatrix.Count - 1)
                 {
-                    JumpTo(Jump.Update);
+                    Next(Jump.Update);
                     break;
                 }
                 Line = Sheet.GetLine(response.Value);
-                JumpTo(Jump.Update);
+                Next(Jump.Update);
                 break;
 
             case Output.Deleted:
                 if (response.Value == Sheet.originalMatrix.Count - 1)
                 {
-                    JumpTo(Jump.Update);
+                    Next(Jump.Update);
                     break;
                 }
                 ScrollingMenu deleteConfirmationMenu = new ScrollingMenu(
@@ -252,14 +233,14 @@ class Navigation
                         if (deleteResponse.Value == 0)
                         {
                             Sheet.RemoveLine(response.Value);
-                            JumpTo(Jump.Sheet);
+                            Next(Jump.Sheet);
                         }
                         else
-                            JumpTo(Jump.Sheet);
+                            Next(Jump.Sheet);
                         break;
                     case Output.Deleted:
                     case Output.Escaped:
-                        JumpTo(Jump.Sheet);
+                        Next(Jump.Sheet);
                         break;
                 }
                 break;
@@ -288,7 +269,7 @@ class Navigation
         var date = new_date.GetResponse();
         if (date?.Status == Output.Escaped)
         {
-            JumpTo(Jump.Sheet);
+            Next(Jump.Sheet);
             Window.RemoveElement(new_date);
             Line = null;
             return;
@@ -445,19 +426,19 @@ class Navigation
                 case Output.Selected:
                     if (confirm.Value == 0)
                     {
-                        JumpTo(Jump.Update);
+                        Next(Jump.Update);
                         break;
                     }
-                    JumpTo(Jump.Sheet);
+                    Next(Jump.Sheet);
                     break;
                 case Output.Deleted:
                 case Output.Escaped:
-                    JumpTo(Jump.Sheet);
+                    Next(Jump.Sheet);
                     break;
             }
             Window.RemoveElement(confirmation);
         }
-        JumpTo(Jump.Sheet);
+        Next(Jump.Sheet);
 
         Line = null;
         #endregion
@@ -478,7 +459,7 @@ class Navigation
         Window.ActivateElement(loading);
 
         Window.RemoveElement(loading);
-        JumpTo(Jump.Home);
+        Next(Jump.Home);
 
         void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
         {
