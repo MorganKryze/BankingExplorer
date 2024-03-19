@@ -1,13 +1,13 @@
 namespace BankingExplorer;
 
-class Program
+class Navigation
 {
     #region Fields
     private static string s_selectedAccount = "";
     private static string s_selectedMonth = "";
     public static (Jump, Jump) s_Jump = (Jump.Exit, Jump.Home);
-    public static CsvSheet? Sheet;
-    public static CsvLine? Line;
+    public static CsvSheet? s_Sheet;
+    public static CsvLine? s_Line;
     #endregion
 
     #region Constants
@@ -49,6 +49,7 @@ class Program
         }
     }
 
+    #region Methods
     static void Next(Jump next) => s_Jump = (s_Jump.Item2, next);
 
     static void SetupWindow()
@@ -60,6 +61,7 @@ class Program
         Window.AddElement(title, header, footer);
         Window.Open();
     }
+    #endregion
 
     static void Home()
     {
@@ -108,6 +110,7 @@ class Program
             folders_renamed[Array.IndexOf(folders, folder)] =
                 folder.Replace(ACCOUNTS_PATH, "")
                 + (Directory.GetFiles(folder).Length == 0 ? " (empty)" : "");
+
         ScrollingMenu accountsMenu = new ScrollingMenu(
             "Please select an account :",
             0,
@@ -180,11 +183,11 @@ class Program
 
     static void Display_Sheet()
     {
-        Sheet = new CsvSheet(s_selectedMonth);
+        s_Sheet = new CsvSheet(s_selectedMonth);
         TableSelector lineSelector = new TableSelector(
             "Cash flow",
-            Sheet.HEADERS,
-            Sheet.originalMatrix.GetRange(1, Sheet.originalMatrix.Count - 1),
+            s_Sheet.HEADERS,
+            s_Sheet.originalMatrix.GetRange(1, s_Sheet.originalMatrix.Count - 1),
             true,
             false,
             "Add an element",
@@ -201,17 +204,17 @@ class Program
                 break;
 
             case Output.Selected:
-                if (response.Value == Sheet.originalMatrix.Count - 1)
+                if (response.Value == s_Sheet.originalMatrix.Count - 1)
                 {
                     Next(Jump.Update);
                     break;
                 }
-                Line = Sheet.GetLine(response.Value);
+                s_Line = s_Sheet.GetLine(response.Value);
                 Next(Jump.Update);
                 break;
 
             case Output.Deleted:
-                if (response.Value == Sheet.originalMatrix.Count - 1)
+                if (response.Value == s_Sheet.originalMatrix.Count - 1)
                 {
                     Next(Jump.Update);
                     break;
@@ -232,7 +235,7 @@ class Program
                     case Output.Selected:
                         if (deleteResponse.Value == 0)
                         {
-                            Sheet.RemoveLine(response.Value);
+                            s_Sheet.RemoveLine(response.Value);
                             Next(Jump.Sheet);
                         }
                         else
@@ -250,7 +253,7 @@ class Program
 
     static void Update()
     {
-        CsvLine line = Line ?? new CsvLine();
+        CsvLine line = s_Line ?? new CsvLine();
 
         # region New_Date
         New_Date:
@@ -271,7 +274,7 @@ class Program
         {
             Next(Jump.Sheet);
             Window.RemoveElement(new_date);
-            Line = null;
+            s_Line = null;
             return;
         }
 
@@ -398,17 +401,17 @@ class Program
         {
             throw new FormatException("Invalid date format");
         }
-        if (Line is not null)
+        if (s_Line is not null)
         {
-            Sheet?.RemoveLine(line.id ?? 0);
+            s_Sheet?.RemoveLine(line.id ?? 0);
         }
         string monthPath = s_selectedAccount + month + ".csv";
-        Sheet = new CsvSheet(monthPath);
-        Sheet?.AddLine(line);
+        s_Sheet = new CsvSheet(monthPath);
+        s_Sheet?.AddLine(line);
         #endregion
 
         #region Repeat the process?
-        if (Line is null)
+        if (s_Line is null)
         {
             ScrollingMenu confirmation = new ScrollingMenu(
                 "Element added !",
@@ -440,7 +443,7 @@ class Program
         }
         Next(Jump.Sheet);
 
-        Line = null;
+        s_Line = null;
         #endregion
     }
 
