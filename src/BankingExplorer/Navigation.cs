@@ -469,13 +469,35 @@ class Navigation
             Directory.CreateDirectory(ARCHIVE_PATH);
         else
             Directory.Delete(ARCHIVE_PATH, true);
+
         var archiveName = DateTime.Now.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
-        Tools.CopyDirectory(ACCOUNTS_PATH, ARCHIVE_PATH + archiveName, true);
+        CopyDirectory(ACCOUNTS_PATH, ARCHIVE_PATH + archiveName, true);
 
         FakeLoadingBar loading = new FakeLoadingBar("[ Archiving ... ]");
         Window.AddElement(loading);
         Window.ActivateElement(loading);
+
         Window.RemoveElement(loading);
         JumpTo(Jump.Home);
+
+        void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
+        {
+            var dir = new DirectoryInfo(sourceDir);
+            if (!dir.Exists)
+                throw new DirectoryNotFoundException($"Source directory not found: {dir.FullName}");
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            Directory.CreateDirectory(destinationDir);
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                string targetFilePath = Path.Combine(destinationDir, file.Name);
+                file.CopyTo(targetFilePath);
+            }
+            if (recursive)
+                foreach (DirectoryInfo subDir in dirs)
+                {
+                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+                    CopyDirectory(subDir.FullName, newDestinationDir, true);
+                }
+        }
     }
 }
