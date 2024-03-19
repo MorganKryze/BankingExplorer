@@ -1,0 +1,9 @@
+global using System.Globalization;
+global using System.Text;
+global using ConsoleAppVisuals;
+global using ConsoleAppVisuals.InteractiveElements;
+global using ConsoleAppVisuals.PassiveElements;
+global using ConsoleAppVisuals.Enums;
+global using CsvHelper;
+global using CsvHelper.Configuration;
+global using CsvHelper.Configuration.Attributes;

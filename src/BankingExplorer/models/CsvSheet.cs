@@ -1,17 +1,18 @@
-using System.Globalization;
-using System.Text;
-using ConsoleAppVisuals;
-using CsvHelper;
-
-namespace program.models;
+namespace BankingExplorer;
 
 public class CsvSheet
 {
-    public List<string> DataAsList = new ();
-    readonly List<List<string>> originalMatrix = new ();
-    readonly List<List<string>> updatedMatrix = new ();
-    readonly List<int> maxLenghts = new ();
+    public List<string> DataAsList = new();
+    public readonly List<List<string>> originalMatrix = new();
+    readonly List<List<string>> updatedMatrix = new();
+    readonly List<int> maxLengths = new();
     readonly string month;
+
+    #region Constants
+
+    public readonly List<string> HEADERS = new() { "Id", "Date", "Amount", "Tag", "Notes" };
+
+    #endregion
 
     public CsvSheet(string pathCsv)
     {
@@ -22,7 +23,7 @@ public class CsvSheet
             file.Close();
         }
         month = pathCsv;
-        List<CsvLine> values = new ();
+        List<CsvLine> values = new();
         var headers = CsvLine.HeaderToStringList();
 
         using (var reader = new StreamReader(pathCsv))
@@ -30,24 +31,24 @@ public class CsvSheet
         {
             csv.Context.RegisterClassMap<CsvMap>();
             var records = csv.GetRecords<CsvLine>().ToList();
-            foreach(var record in records)
+            foreach (var record in records)
                 values.Add(record);
         }
         for (int i = 0; i < headers.Count; i++)
         {
             var localMax = headers[i].Length;
-            foreach(var value in values)
-                if(value.ValuesToStringList()[i].Length > localMax)
+            foreach (var value in values)
+                if (value.ValuesToStringList()[i].Length > localMax)
                     localMax = value.ValuesToStringList()[i].Length;
-            maxLenghts.Add(localMax);
+            maxLengths.Add(localMax);
         }
 
-
         originalMatrix.Add(headers);
-        foreach(var value in values)
+        foreach (var value in values)
             originalMatrix.Add(value.ValuesToStringList());
         Config();
     }
+
     public void Config()
     {
         for (int i = 0; i < originalMatrix.Count; i++)
@@ -59,10 +60,10 @@ public class CsvSheet
 
         var margin = 2;
         for (int i = 0; i < originalMatrix.Count; i++)
-            for (int j = 0; j < originalMatrix[i].Count; j++)
-                updatedMatrix[i][j] = originalMatrix[i][j].PadRight(maxLenghts[j] + margin);
+        for (int j = 0; j < originalMatrix[i].Count; j++)
+            updatedMatrix[i][j] = originalMatrix[i][j].PadRight(maxLengths[j] + margin);
 
-        for (int i =0; i < updatedMatrix.Count; i++)
+        for (int i = 0; i < updatedMatrix.Count; i++)
         {
             var localString = "";
             for (int j = 0; j < updatedMatrix[i].Count; j++)
@@ -72,14 +73,7 @@ public class CsvSheet
             localString += "│";
             DataAsList.Add(localString);
         }
-        DataAsList.Add("└".PadRight(DataAsList[0].Length - 1, '─')+"┘");
-
-    }
-
-    public void ConsoleDisplay()
-    {
-        Core.WriteParagraph(true, Core.ContentHeigth, DataAsList[0]);
-        Core.WriteParagraph(false, Core.ContentHeigth + 1, DataAsList.GetRange(1, DataAsList.Count -1).ToArray());
+        DataAsList.Add("└".PadRight(DataAsList[0].Length - 1, '─') + "┘");
     }
 
     public void AddLine(CsvLine line)
@@ -92,6 +86,7 @@ public class CsvSheet
         originalMatrix.Add(line.ValuesToStringList());
         SaveAndWrite();
     }
+
     public void RemoveLine(int index)
     {
         originalMatrix.RemoveAt(index + 1);
@@ -99,6 +94,7 @@ public class CsvSheet
             originalMatrix[i][0] = (i - 1).ToString();
         SaveAndWrite();
     }
+
     public CsvLine GetLine(int index)
     {
         return new CsvLine
@@ -110,6 +106,7 @@ public class CsvSheet
             note = originalMatrix[index + 1][4] == "\n" ? null : originalMatrix[index + 1][4]
         };
     }
+
     public void SaveAndWrite()
     {
         var dataToWrite = new List<CsvLine>();
@@ -125,7 +122,19 @@ public class CsvSheet
             };
             dataToWrite.Add(line);
         }
-        dataToWrite = dataToWrite.OrderBy(x => DateTime.Parse(x.date ?? string.Empty)).ToList();
+        dataToWrite = dataToWrite
+            .OrderBy(x =>
+            {
+                DateTime.TryParseExact(
+                    x.date,
+                    "dd.MM.yyyy",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out DateTime temp
+                );
+                return temp;
+            })
+            .ToList();
         for (int i = 0; i < dataToWrite.Count; i++)
             dataToWrite[i].id = i;
         using (var writer = new StreamWriter(month))
@@ -135,7 +144,8 @@ public class CsvSheet
             csv.WriteRecords(dataToWrite);
         }
     }
-    public static void CsvSheetExistscheck(string path)
+
+    public static void CsvSheetExistsCheck(string path)
     {
         if (!File.Exists(path))
         {
@@ -144,5 +154,4 @@ public class CsvSheet
             file.Close();
         }
     }
-
 }

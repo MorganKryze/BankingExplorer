@@ -1,12 +1,10 @@
 name: CI
+
 on:
   push:
     branches:
     - main
-    - dev
-  pull_request:
-    branches:
-    - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,4 +13,4 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Build project
-      run: cd program && dotnet restore && dotnet build
+      run: cd src/BankingExplorer && dotnet restore && dotnet build
